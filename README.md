@@ -106,3 +106,67 @@ const TodoList = ({ todos, removeTodo }) => {
 
 export default TodoList;
 ```
+
+## Étape 4 : On combine avec le hook useContext
+
+Nous allons donc mélanger nos hooks de façon logique, et nous allons d'abord créer le context dans un dossier `context -> todoContext`.
+
+Et dedans, nous allons transferer notre logique dedans, c'est à dire le state `input`, le useReducer, les méthodes `addTodo` et `removeTodo`.
+
+fichier final :
+```js
+import React, { createContext, useState, useReducer } from "react";
+import { initialState, todoReducer } from "../reducer/todoReducer";
+
+const TodoContext = createContext("");
+
+const TodoContextProvider = ({ children }) => {
+  const [input, setInput] = useState("");
+  const [todos, dispatch] = useReducer(todoReducer, initialState);
+
+  const addTodo = () => {
+    dispatch({ type: "ADD_TODO", payload: input });
+    setInput("");
+  };
+
+  const removeTodo = (todo) => {
+    dispatch({ type: "REMOVE_TODO", payload: todo });
+  };
+
+  const handleChange = (e) => setInput(e.target.value);
+
+  return (
+    <TodoContext.Provider value={{ todos, addTodo, removeTodo, handleChange }}>
+      {children}
+    </TodoContext.Provider>
+  );
+};
+```
+
+Pour un soucie de visibilité, nous allons créer un fichier `todoReducer` dans le dossier `reducer`.
+
+```js
+import datas from "../helpers/data.js";
+
+const todoReducer = (state, action) => {
+  switch (action.type) {
+    case "ADD_TODO":
+      return [...state, action.payload];
+    case "REMOVE_TODO":
+      return state.filter((todo) => todo !== action.payload);
+    default:
+      return state;
+  }
+};
+const initialTodo = datas;
+
+export { todoReducer, initialTodo };
+```
+
+Après on fait du propre :
+```diff
+-   <TodoList todos={todos} removeTodo={removeTodo} />
++   <TodoList />
+```
+
+Et oui, avec le context, pas besoin de props.
