@@ -68,3 +68,41 @@ Du coup, nous devons faire une autre modification, sur le bouton Ajouter.
 ```js
 <button onClick={addTodo}>Ajouter</button>
 ```
+
+## Étape 3 : Ajout de la méthode "removeTodo"
+
+Maintenant que nous avons la méthode `addTodo`, nous allons ajouter la méthode `removeTodo`.
+
+Celui ci sera passé un props dans le composant `TodoList`.
+
+```js
+  const removeTodo = (todo) => {
+    dispatchTodo({ type: "REMOVE_TODO", payload: todo });
+  };
+```
+
+Et dans le composant `TodoList`, nous allons ajouter la méthode `removeTodo` :
+
+```js
+import React from "react";
+
+const TodoList = ({ todos, removeTodo }) => {
+  return (
+    <div>
+      <h1>Todo List</h1>
+      <ul>
+        {todos.map((todo, id) => {
+          return (
+            <li key={id}>
+              {todo}
+              <button onClick={() => removeTodo(todo)}>X</button>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+};
+
+export default TodoList;
+```

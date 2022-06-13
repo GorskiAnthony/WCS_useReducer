@@ -43,6 +43,10 @@ const App = () => {
     setInput("");
   };
 
+  const removeTodo = (todo) => {
+    dispatchTodo({ type: "REMOVE_TODO", payload: todo });
+  };
+
   return (
     <div>
       <h1>To do</h1>
@@ -50,7 +54,7 @@ const App = () => {
         <input type="text" value={input} onChange={handleChange} />
         <button onClick={addTodo}>Ajouter</button>
       </div>
-      <TodoList todos={todos} />
+      <TodoList todos={todos} removeTodo={removeTodo} />
     </div>
   );
 };
